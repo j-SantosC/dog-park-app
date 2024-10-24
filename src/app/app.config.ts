@@ -1,8 +1,6 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { firebaseConfig } from '../../firebase'; // Ajusta la ruta si es necesario
 
-import { routes } from './app.routes';
-
-export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+export const appConfig = {
+  providers: [{ provide: FIREBASE_OPTIONS, useValue: firebaseConfig }],
 };
