@@ -42,3 +42,6 @@ Thumbs.db
 
 # Firebase
 firebase.ts
+
+#VSC
+.vscode/

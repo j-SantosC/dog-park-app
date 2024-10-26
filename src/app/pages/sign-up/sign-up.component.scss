@@ -1,0 +1,93 @@
+$primary-color: #3f51b5;
+$disabled-color: #ccc;
+$background-color: #f4f4f9;
+$container-background: white;
+$container-shadow: rgba(0, 0, 0, 0.1);
+
+.login-container {
+	max-width: 400px;
+	margin: 0 auto;
+	background-color: $container-background;
+	padding: 2rem;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px $container-shadow;
+}
+
+.sign-up-form,
+.login-form {
+	h2 {
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+}
+
+.form-group {
+	margin-bottom: 1rem;
+
+	label {
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+
+	input {
+		width: 100%;
+		padding: 0.75rem;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+}
+
+button {
+	width: 100%;
+	padding: 0.75rem;
+	background-color: $primary-color;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+
+	&:disabled {
+		background-color: $disabled-color;
+	}
+
+	&:hover:not(:disabled) {
+		background-color: darken($primary-color, 10%);
+	}
+}
+
+.login-text,
+.sign-up-text {
+	text-align: center;
+	margin-top: 1rem;
+	color: #333;
+
+	a {
+		color: $primary-color;
+		text-decoration: none;
+		transition: text-decoration 0.2s ease;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.login-container {
+		max-width: 90%;
+		margin: 0 auto;
+		padding: 1.5rem;
+	}
+
+	h2 {
+		font-size: 1.25rem;
+	}
+
+	.form-group input,
+	button {
+		padding: 0.5rem;
+		font-size: 0.875rem;
+	}
+}

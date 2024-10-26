@@ -1,37 +1,61 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	color: #333;
 }
 
 .app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
 .app-header {
-  background-color: #3f51b5;
-  color: white;
-  padding: 1rem;
-  text-align: center;
+	background-color: #3f51b5;
+	color: white;
+	padding: 1rem 2rem;
+	text-align: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logout-button {
+	background-color: #9a261e;
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	cursor: pointer;
+}
+
+.logout-button:hover {
+	background-color: #661111;
 }
 
 .app-content {
-  flex-grow: 1;
-  padding: 2rem;
+	flex-grow: 1;
+	padding: 2rem;
 }
 
 .app-footer {
-  background-color: #3f51b5;
-  color: white;
-  text-align: center;
-  padding: 1rem;
-  margin-top: auto;
+	background-color: #3f51b5;
+	color: white;
+	text-align: center;
+	padding: 1rem;
+	margin-top: auto;
+}
+
+@media (max-width: 480px) {
+	.app-header {
+		font-size: 14px;
+	}
+	.app-content {
+		padding: 0;
+	}
 }
