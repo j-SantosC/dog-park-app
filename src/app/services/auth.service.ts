@@ -47,6 +47,10 @@ export class AuthService {
 		return this.user$;
 	}
 
+	setUser(user: User | null): void {
+		this.userSubject.next(user);
+	}
+
 	getToken(): Promise<string | null> {
 		if (this.auth.currentUser) {
 			return this.auth.currentUser.getIdToken().then((token) => token);

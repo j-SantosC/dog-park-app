@@ -2,15 +2,15 @@ $primary-color: #3f51b5;
 $disabled-color: #ccc;
 $background-color: #f4f4f9;
 $container-background: white;
-$container-shadow: rgba(0, 0, 0, 0.1);
+$container-shadow: rgb(0 0 0 / 10%);
 
 .login-container {
-	max-width: 400px;
-	margin: 0 auto;
 	background-color: $container-background;
-	padding: 2rem;
 	border-radius: 8px;
 	box-shadow: 0 2px 10px $container-shadow;
+	margin: 0 auto;
+	max-width: 400px;
+	padding: 2rem;
 }
 
 .sign-up-form,
@@ -30,22 +30,22 @@ $container-shadow: rgba(0, 0, 0, 0.1);
 	}
 
 	input {
-		width: 100%;
-		padding: 0.75rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
+		padding: 0.75rem;
+		width: 100%;
 	}
 }
 
 button {
-	width: 100%;
-	padding: 0.75rem;
 	background-color: $primary-color;
-	color: white;
 	border: none;
 	border-radius: 4px;
+	color: white;
 	cursor: pointer;
+	padding: 0.75rem;
 	transition: background-color 0.3s ease;
+	width: 100%;
 
 	&:disabled {
 		background-color: $disabled-color;
@@ -58,15 +58,15 @@ button {
 
 .login-text,
 .sign-up-text {
-	text-align: center;
-	margin-top: 1rem;
 	color: #333;
+	margin-top: 1rem;
+	text-align: center;
 
 	a {
 		color: $primary-color;
+		cursor: pointer;
 		text-decoration: none;
 		transition: text-decoration 0.2s ease;
-		cursor: pointer;
 
 		&:hover {
 			text-decoration: underline;
@@ -74,10 +74,10 @@ button {
 	}
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
 	.login-container {
-		max-width: 90%;
 		margin: 0 auto;
+		max-width: 90%;
 		padding: 1.5rem;
 	}
 
@@ -87,7 +87,7 @@ button {
 
 	.form-group input,
 	button {
-		padding: 0.5rem;
 		font-size: 0.875rem;
+		padding: 0.5rem;
 	}
 }

@@ -2,7 +2,6 @@ import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { user } from '@angular/fire/auth';
 import { Router, RouterModule } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { TokenService } from '../../services/token.service';
@@ -42,6 +41,7 @@ export class SignUpComponent implements OnInit {
 				.pipe(switchMap(() => this.authService.login(email, password)))
 				.subscribe(
 					(user) => {
+						this.authService.setUser(user);
 						user?.getIdToken().then((token) => {
 							this.tokenService.setToken(token);
 							this.router.navigate(['/dashboard']);

@@ -1,0 +1,6 @@
+<div class="profile-container">
+	<span>profile works</span>
+	<img [src]="imageSrc" alt="profile-image" />
+	<span (click)="fileInput.click()">Upload new image</span>
+	<input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+</div>

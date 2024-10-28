@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
@@ -35,15 +30,11 @@ export class LoginComponent implements OnInit {
 	ngOnInit(): void {
 		const token = this.tokenService.getToken();
 		if (token) {
-			this.authService
-				.validateToken(token)
-				.then((isValid) => {
-					if (isValid) {
-						this.router.navigate([
-							'/dashboard',
-						]);
-					}
-				});
+			this.authService.validateToken(token).then((isValid) => {
+				if (isValid) {
+					this.router.navigate(['/dashboard']);
+				}
+			});
 		}
 	}
 
@@ -56,22 +47,16 @@ export class LoginComponent implements OnInit {
 		this.authService
 			.login(email, password)
 			.then((user) => {
+				this.authService.setUser(user);
 				if (user) {
 					user.getIdToken().then((token) => {
-						this.tokenService.setToken(
-							token
-						);
-						this.router.navigate([
-							'/dashboard',
-						]);
+						this.tokenService.setToken(token);
+						this.router.navigate(['/dashboard']);
 					});
 				}
 			})
 			.catch((error) => {
-				console.error(
-					'Error durante el inicio de sesión',
-					error
-				);
+				console.error('Error durante el inicio de sesión', error);
 			});
 	}
 }

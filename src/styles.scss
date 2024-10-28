@@ -1,13 +1,13 @@
 * {
+	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
 }
 
 body {
-	font-family: Arial, sans-serif;
 	background-color: #f5f5f5;
 	color: #333;
+	font-family: Arial, sans-serif;
 }
 
 .app-container {
@@ -17,25 +17,25 @@ body {
 }
 
 .app-header {
+	align-items: center;
 	background-color: #3f51b5;
 	color: white;
-	padding: 1rem 2rem;
-	text-align: center;
 	display: flex;
 	justify-content: space-between;
-	align-items: center;
+	padding: 1rem 2rem;
+	text-align: center;
 }
 
 .logout-button {
 	background-color: #9a261e;
-	color: white;
 	border: none;
-	padding: 0.5rem 1rem;
+	color: white;
 	cursor: pointer;
+	padding: 0.5rem 1rem;
 }
 
 .logout-button:hover {
-	background-color: #661111;
+	background-color: #611;
 }
 
 .app-content {
@@ -46,15 +46,16 @@ body {
 .app-footer {
 	background-color: #3f51b5;
 	color: white;
-	text-align: center;
-	padding: 1rem;
 	margin-top: auto;
+	padding: 1rem;
+	text-align: center;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
 	.app-header {
 		font-size: 14px;
 	}
+
 	.app-content {
 		padding: 0;
 	}
