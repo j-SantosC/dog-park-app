@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, User } from '@angular/fire/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { config } from '../../../config';
+import { CookieService } from './cookie.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -12,11 +13,11 @@ export class AuthService {
 	public user$: Observable<User | null> = this.userSubject.asObservable();
 
 	constructor(
-		private auth: Auth,
-		private http: HttpClient
-	) {
-		this.userSubject.next(this.auth.currentUser);
-	}
+		//TODO: review this public
+		public auth: Auth,
+		private http: HttpClient,
+		private cookieService: CookieService
+	) {}
 
 	apiUrl = config.apiUrl;
 
@@ -28,8 +29,11 @@ export class AuthService {
 	login(email: string, password: string): Promise<User | null> {
 		return signInWithEmailAndPassword(this.auth, email, password)
 			.then((userCredential) => {
-				this.userSubject.next(userCredential.user);
-				return userCredential.user;
+				const user = userCredential.user;
+				this.userSubject.next(user);
+				this.cookieService.set('user', JSON.stringify(user), 1, true);
+
+				return user;
 			})
 			.catch((error) => {
 				console.error('Error during login:', error);

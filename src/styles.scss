@@ -26,21 +26,11 @@ body {
 	text-align: center;
 }
 
-.logout-button {
-	background-color: #9a261e;
-	border: none;
-	color: white;
-	cursor: pointer;
-	padding: 0.5rem 1rem;
-}
-
-.logout-button:hover {
-	background-color: #611;
-}
-
 .app-content {
 	flex-grow: 1;
 	padding: 2rem;
+	display: flex; /* Set as flex container if child components need alignment */
+	flex-direction: column; /* Vertical alignment if needed */
 }
 
 .app-footer {
@@ -51,9 +41,14 @@ body {
 	text-align: center;
 }
 
+.logout-button {
+	color: white;
+	font-size: 12px;
+}
+
 @media (width <= 480px) {
 	.app-header {
-		font-size: 14px;
+		font-size: 8px;
 	}
 
 	.app-content {
