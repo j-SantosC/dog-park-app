@@ -1,31 +1,36 @@
 .app-button {
-	background-color: #4caf50; // Primary button color
+	background-color: #4caf50;
 	color: #fff;
 	font-size: 1rem;
 	font-weight: 600;
 	border: none;
-	border-radius: 12px; // Rounded edges
+	border-radius: 12px;
 	padding: 0.75rem 1.5rem;
 	cursor: pointer;
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Subtle shadow for depth
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	margin: 0.5rem;
+}
 
-	// Hover effect
-	&:hover {
-		background-color: #66bb6a; // Lighter shade on hover
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-		transform: translateY(-2px);
-	}
+.app-button--small {
+	font-size: 0.875rem; /* Smaller font size */
+	padding: 0.5rem 1rem; /* Smaller padding */
+	border-radius: 8px; /* Adjusted for smaller size */
+}
 
-	// Pressed effect
-	&:active {
-		transform: translateY(1px);
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
+/* Hover effect */
+.app-button:hover {
+	background-color: #66bb6a;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+	transform: translateY(-2px);
+}
+
+/* Pressed effect */
+.app-button:active {
+	transform: translateY(1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

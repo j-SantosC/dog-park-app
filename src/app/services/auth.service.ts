@@ -36,7 +36,11 @@ export class AuthService {
 				return user;
 			})
 			.catch((error) => {
-				console.error('Error during login:', error);
+				if (error.code === 'auth/multi-factor-auth-required') {
+					console.error('Multi-factor authentication required:', error);
+				} else {
+					console.error('Error during login:', error);
+				}
 				throw error;
 			});
 	}
@@ -44,6 +48,8 @@ export class AuthService {
 	logout(): Promise<void> {
 		return this.auth.signOut().then(() => {
 			this.userSubject.next(null);
+			this.cookieService.delete('user');
+			this.cookieService.delete('auth_token');
 		});
 	}
 

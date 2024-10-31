@@ -5,34 +5,48 @@
 	flex-grow: 1;
 }
 
+// General styles
 .title {
 	margin: 1rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #333;
+	text-align: center;
 }
 
 .container {
 	display: flex;
-	flex-direction: column;
-	width: 100%; // Allow container to expand to full height
-	height: 100%; // Full height of the parent
+	width: 100%;
+	height: 100%;
 	flex-grow: 1;
-	justify-content: space-between;
+	justify-content: center;
+	gap: 2rem;
+	padding: 2rem;
 
-	.profile-container {
-		align-items: center;
+	// Dog container styling
+	.dog-container {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		align-items: center;
 		background-color: #f9f9f9;
 		padding: 2rem;
 		border-radius: 10px;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		max-width: 300px;
-		margin: 0 auto; // Center horizontally
+		text-align: center;
+		flex-grow: 1;
+
+		.title {
+			margin: 0;
+			text-align: start;
+			width: 100%;
+		}
 
 		img {
 			border-radius: 50%;
-			margin: 2rem 0;
-			max-width: 150px;
+			width: 120px;
+			height: 120px;
+			object-fit: cover;
+			margin: 1.5rem 0;
 			border: 4px solid #ddd;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 		}
@@ -41,7 +55,8 @@
 			color: #333;
 			font-size: 1.2rem;
 			font-weight: bold;
-			margin-bottom: 1rem;
+			margin-bottom: 0.5rem;
+			text-align: start;
 		}
 
 		span.upload-button {
@@ -51,12 +66,12 @@
 			cursor: pointer;
 			padding: 0.5rem 1rem;
 			border-radius: 5px;
+			background-color: white;
+			border: 2px solid #3f51b5;
+			margin-top: 1rem;
 			transition:
 				color 0.3s ease,
 				background-color 0.3s ease;
-			border: 2px solid #3f51b5;
-			background-color: white;
-			margin-top: 1rem;
 
 			&:hover {
 				background-color: #3f51b5;
@@ -65,12 +80,128 @@
 		}
 	}
 
+	// Profile container styling
+	.profile-container {
+		display: flex;
+		flex-direction: column;
+		background-color: #f9f9f9;
+		padding: 2rem;
+		border-radius: 10px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		flex-grow: 2;
+
+		// Profile header styling
+		.profile-header-wrapper {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 2rem;
+			align-items: flex-start;
+
+			.title {
+				color: #333;
+				font-size: 1.2rem;
+				font-weight: bold;
+				margin: 0;
+			}
+		}
+
+		.complete-info {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+		// User info container styling
+		.user-info-container {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.5rem;
+			padding: 1.5rem;
+			border-radius: 12px;
+			background-color: #f3f4fc; // Light background for card effect
+			box-shadow: 0 4px 10px rgba(63, 81, 181, 0.1); // Soft shadow for depth
+			border: 1px solid rgba(63, 81, 181, 0.2); // Subtle border
+
+			span {
+				font-size: 1rem;
+				color: #333;
+				display: flex;
+				flex-direction: column;
+
+				// Label styling
+				.label {
+					font-weight: 600;
+					color: #3f51b5; // Blue accent color
+					font-size: 0.95rem;
+					margin-bottom: 0.3rem;
+					text-transform: uppercase; // Consistent label styling
+				}
+
+				// Value styling
+				.value {
+					font-weight: 500;
+					color: #555; // Darker color for values
+					font-size: 1.05rem;
+					margin-top: 0.2rem;
+				}
+			}
+		}
+	}
+
+	// Form container styling
+	.form-container {
+		display: flex;
+		flex-direction: column;
+
+		form {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+
+			label {
+				font-weight: bold;
+				color: #3f51b5;
+				font-size: 1rem;
+			}
+
+			input {
+				padding: 0.75rem;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				font-size: 1rem;
+				background-color: #f0f0f0;
+
+				&:focus {
+					outline: none;
+					border-color: #3f51b5;
+					box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+				}
+			}
+
+			button {
+				background-color: #3f51b5;
+				color: white;
+				border: none;
+				cursor: pointer;
+				padding: 0.75rem;
+				font-size: 1rem;
+				font-weight: bold;
+				border-radius: 5px;
+				transition: background-color 0.3s ease;
+				margin-top: 1.5rem;
+
+				&:hover {
+					background-color: #2c387e;
+				}
+			}
+		}
+	}
+
+	// Spinner styling
 	.spinner {
 		width: 100%;
 		height: 50vh;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: #f0f0f0;
 	}
 }

@@ -1,13 +1,59 @@
 <h2 class="title">Profile</h2>
-<div *ngIf="!loading" class="container">
-	<div class="profile-container">
-		<span>My dog</span>
+<div class="container">
+	<div *ngIf="!loading" class="dog-container">
+		<div class="title">
+			<span>My dog</span>
+		</div>
 		<img [src]="imageSrc" alt="profile-image" />
 		<span class="upload-button" (click)="fileInput.click()">Upload New Image</span>
 		<input type="file" #fileInput (change)="onFileSelected($event)" hidden />
 	</div>
-	<div class="buttons-container">
-		<app-button (onClick)="backClicked()"> Back </app-button>
+	<div *ngIf="!loading" class="profile-container">
+		<div class="profile-header-wrapper">
+			<span class="title">Me</span>
+			<app-button *ngIf="userInfo" [isSmall]="true" (onClick)="edit = !edit"> {{ !edit ? 'Edit' : 'Save' }}</app-button>
+		</div>
+
+		<div *ngIf="!userInfo && !edit" class="complete-info">
+			<span>Complete user info now</span>
+			<app-button (onClick)="edit = true" [isSmall]="true">Add info</app-button>
+		</div>
+
+		<div *ngIf="userInfo && !edit" class="user-info-container">
+			<span>
+				<span class="label">Name</span>
+				<span class="value">{{ userInfo.name }}</span>
+			</span>
+			<span>
+				<span class="label">Lastname</span>
+				<span class="value">{{ userInfo.lastname }}</span>
+			</span>
+			<span>
+				<span class="label">Email</span>
+				<span class="value">{{ user?.email }}</span>
+			</span>
+			<span>
+				<span class="label">Birthdate</span>
+				<span class="value">{{ userInfo.birthdate }}</span>
+			</span>
+		</div>
+		<div *ngIf="edit" class="form-container">
+			<form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+				<label>Name:</label>
+				<input formControlName="name" />
+
+				<label>Last Name:</label>
+				<input formControlName="lastname" />
+
+				<label>Email:</label>
+				<input formControlName="email" type="email" />
+
+				<label>Birthdate:</label>
+				<input formControlName="birthdate" type="date" />
+
+				<button type="submit">Submit</button>
+			</form>
+		</div>
 	</div>
 	<div *ngIf="loading" class="spinner">
 		<app-spinner></app-spinner>
