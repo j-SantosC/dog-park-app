@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { catchError, distinctUntilChanged, firstValueFrom, map, Observable, of, take } from 'rxjs';
+import { catchError, firstValueFrom, map, of, Observable, forkJoin } from 'rxjs';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ButtonComponent } from '../../components/button/button.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { User } from '@angular/fire/auth';
 import { UserService } from '../../services/user.service';
+import { DogService } from '../../services/dog.service';
+import { UploadImageComponent } from '../../componenets/upload-image/upload-image.component';
 
 interface UserInfo {
 	name: string;
@@ -16,10 +18,11 @@ interface UserInfo {
 	email: string;
 	birthdate: Date;
 }
+
 @Component({
 	selector: 'app-profile',
 	standalone: true,
-	imports: [RouterModule, SpinnerComponent, NgIf, ButtonComponent, ReactiveFormsModule],
+	imports: [RouterModule, SpinnerComponent, NgIf, ButtonComponent, ReactiveFormsModule, UploadImageComponent, NgFor],
 	templateUrl: './profile.component.html',
 	styleUrl: './profile.component.scss',
 })
@@ -29,17 +32,23 @@ export class ProfileComponent implements OnInit {
 		private authService: AuthService,
 		private router: Router,
 		private fb: FormBuilder,
-		private userService: UserService
+		private userService: UserService,
+		private dogService: DogService
 	) {}
 
 	loading = true;
 	edit = false;
-
 	imageSrc = 'assets/default-dog.webp';
 
 	user: User | null = null;
 	userInfo: UserInfo | null = null;
+	userDogs: any[] = [];
+
 	userForm!: FormGroup;
+	dogForm!: FormGroup;
+
+	newDog = false;
+	editDog = '';
 
 	async ngOnInit(): Promise<void> {
 		this.userForm = this.fb.group({
@@ -49,27 +58,46 @@ export class ProfileComponent implements OnInit {
 			birthdate: ['', Validators.required],
 		});
 
+		this.dogForm = this.fb.group({
+			name: ['', Validators.required],
+			breed: ['', Validators.required],
+			birthdate: ['', Validators.required],
+			sex: ['', Validators.required],
+			isServiceDog: [false],
+		});
+
 		this.user = await firstValueFrom(this.getUser());
 		this.userInfo = await this.getUserInfo();
+		await this.loadImages(true);
+		this.getDogs();
+		this.loading = false;
+	}
 
+	getUser(): Observable<User | null> {
+		return this.authService.getCurrentUser();
+	}
+
+	async getUserInfo(): Promise<UserInfo | null> {
+		this.loading = true;
+		try {
+			const userInfo = await firstValueFrom(this.userService.getUserInfo(this.user?.uid));
+			this.loading = false;
+			return userInfo;
+		} catch (error) {
+			console.error('Error fetching user info:', error);
+			this.loading = false;
+			return null;
+		}
+	}
+
+	onEditUserInfo() {
+		this.edit = !this.edit;
 		this.userForm.patchValue({
 			name: this.userInfo?.name,
 			lastname: this.userInfo?.lastname,
 			email: this.user?.email,
 			birthdate: this.userInfo?.birthdate,
 		});
-
-		await this.getProfileImage();
-		this.loading = false;
-	}
-
-	async getUserInfo(): Promise<UserInfo | null> {
-		try {
-			return await firstValueFrom(this.userService.getUserInfo(this.user?.uid));
-		} catch (error) {
-			console.error('Error fetching user info:', error);
-			return null;
-		}
 	}
 
 	async onSubmit(): Promise<void> {
@@ -87,55 +115,104 @@ export class ProfileComponent implements OnInit {
 		this.userInfo = await this.getUserInfo();
 	}
 
-	onFileSelected(event: Event): void {
-		const file = (event.target as HTMLInputElement).files?.[0];
-		if (file) {
-			this.UploadProfileImage(file);
+	uploadProfileImage(img: any): void {
+		this.profileService.uploadProfileImg(img).subscribe(() => this.loadImages(true));
+	}
+
+	async getDogs() {
+		this.userDogs = await firstValueFrom(this.dogService.getUserDogs(this.user?.uid));
+		this.loadImages(false);
+	}
+
+	onEditDog(dogID: string) {
+		console.log(dogID);
+		this.editDog = dogID;
+		const dogToEdit = this.userDogs.find((dog) => {
+			return dog.id === dogID;
+		});
+		if (dogToEdit) {
+			this.dogForm.patchValue({
+				name: dogToEdit.name,
+				breed: dogToEdit.breed,
+				birthdate: dogToEdit.birthdate,
+				sex: dogToEdit.sex,
+				isServiceDog: dogToEdit.isServiceDog,
+			});
+		} else {
+			console.log('no dog to edit');
 		}
 	}
 
-	UploadProfileImage(file: File): void {
-		this.loading = true;
-		const formData = new FormData();
-		formData.append('image', file);
-		this.profileService.uploadProfileImg(formData).subscribe(() => this.getProfileImage());
-	}
-
-	getProfileImage(): void {
-		this.loading = true;
-		this.getUserId()
-			.pipe(
-				take(1),
-				catchError((error) => {
-					return of(null); // or return an empty observable
-				})
-			)
-			.subscribe((userId) => this.loadProfileImage(userId!));
-	}
-
-	getUserId(): Observable<string> {
-		return this.getUser().pipe(
-			map((user) => {
-				return user!.uid;
-			}),
-			distinctUntilChanged()
-		);
-	}
-
-	loadProfileImage(userId: string): void {
-		this.profileService.getProfileImg(userId).subscribe((profileImgBlob) => {
-			if (profileImgBlob) {
-				const objectURL = URL.createObjectURL(profileImgBlob);
-				this.imageSrc = objectURL;
-			} else {
-				this.imageSrc = 'assets/default-dog.webp';
+	onDogSubmit() {
+		if (this.dogForm.valid) {
+			if (this.newDog) {
+				const userUID = this.user?.uid;
+				const dogData = { ...this.dogForm.getRawValue(), userUID };
+				this.dogService.addDog(dogData).subscribe((res) => this.getDogs());
+				this.newDog = false;
 			}
-			this.loading = false;
-		});
+			if (this.editDog) {
+				const updatedData = this.dogForm.getRawValue();
+
+				this.dogService.updateDogInfo(this.editDog, updatedData).subscribe({
+					next: (response) => this.getDogs(),
+					error: (error) => console.error('Error updating dog:', error),
+				});
+			}
+			this.editDog = '';
+			this.dogForm.reset();
+		}
+	}
+	uploadDogImage(img: any, dog: any) {
+		this.dogService.uploadDogImage(dog.id, img).subscribe(() => this.loadImages(false));
 	}
 
-	getUser(): Observable<User | null> {
-		return this.authService.getCurrentUser();
+	async loadImages(isProfileImage: boolean): Promise<void> {
+		const userId = this.user?.uid; // Use existing user ID directly
+
+		if (!userId) {
+			console.error('User ID is not available.');
+			this.imageSrc = isProfileImage ? 'assets/default-dog.webp' : ''; // Set a default or empty image if no user ID
+			return;
+		}
+
+		// Separate observables for profile image and dog images to match types
+		if (isProfileImage) {
+			// Load profile image
+			return firstValueFrom(
+				this.profileService.getProfileImg(userId).pipe(
+					map((imgBlob) => (imgBlob instanceof Blob ? URL.createObjectURL(imgBlob) : 'assets/default-dog.webp')),
+					catchError(() => of('assets/default-dog.webp'))
+				)
+			).then((profileImgSrc) => {
+				this.imageSrc = profileImgSrc as string;
+				this.loading = false;
+			});
+		} else {
+			// Load dog images
+			return firstValueFrom(
+				forkJoin(
+					this.userDogs.map((dog) =>
+						this.dogService.getDogImg(dog.id).pipe(
+							map((imgBlob) => ({
+								dogId: dog.id,
+								imgSrc: imgBlob instanceof Blob ? URL.createObjectURL(imgBlob) : 'assets/default-dog.webp',
+							})),
+							catchError(() => of({ dogId: dog.id, imgSrc: 'assets/default-dog.webp' }))
+						)
+					)
+				).pipe(catchError(() => of([])))
+			).then((dogImages) => {
+				// Assign each dog image to the correct dog in userDogs array
+				(dogImages as { dogId: string; imgSrc: string }[]).forEach(({ dogId, imgSrc }) => {
+					const dog = this.userDogs.find((d) => d.id === dogId);
+					if (dog) {
+						dog.imageSrc = imgSrc;
+					}
+				});
+				this.loading = false;
+			});
+		}
 	}
 
 	backClicked(): void {

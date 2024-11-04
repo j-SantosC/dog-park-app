@@ -27,10 +27,14 @@ body {
 }
 
 .app-content {
+	display: flex;
+
+	/* Set as flex container if child components need alignment */
+	flex-direction: column;
+
+	/* Vertical alignment if needed */
 	flex-grow: 1;
 	padding: 2rem;
-	display: flex; /* Set as flex container if child components need alignment */
-	flex-direction: column; /* Vertical alignment if needed */
 }
 
 .app-footer {
@@ -43,11 +47,11 @@ body {
 
 .logout-button {
 	color: white;
-	font-size: 12px;
 	cursor: pointer;
+	font-size: 12px;
 }
 
-@media (width <= 480px) {
+@media (width <=480px) {
 	.app-header {
 		font-size: 8px;
 	}

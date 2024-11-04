@@ -1,207 +1,206 @@
 :host {
-	height: 100%;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
+	height: 100%;
 }
 
-// General styles
-.title {
-	margin: 1rem;
-	font-size: 1.5rem;
-	font-weight: bold;
-	color: #333;
-	text-align: center;
-}
+
 
 .container {
 	display: flex;
-	width: 100%;
-	height: 100%;
-	flex-grow: 1;
-	justify-content: center;
 	gap: 2rem;
+	height: 100%;
+	justify-content: center;
 	padding: 2rem;
+	width: 100%;
 
-	// Dog container styling
+	.title-wrapper {
+		align-items: center;
+		display: flex;
+		font-size: 18px;
+		font-weight: bold;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	.profile-container,
 	.dog-container {
+		background-color: #f9f9f9;
+		border-radius: 10px;
+		box-shadow: 0 4px 12px rgb(16 6 6 / 26.6%);
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		background-color: #f9f9f9;
-		padding: 2rem;
-		border-radius: 10px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		text-align: center;
 		flex-grow: 1;
+		padding: 2rem;
 
-		.title {
-			margin: 0;
-			text-align: start;
-			width: 100%;
-		}
 
-		img {
-			border-radius: 50%;
-			width: 120px;
-			height: 120px;
-			object-fit: cover;
-			margin: 1.5rem 0;
-			border: 4px solid #ddd;
-			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-		}
-
-		span {
-			color: #333;
-			font-size: 1.2rem;
-			font-weight: bold;
-			margin-bottom: 0.5rem;
-			text-align: start;
-		}
-
-		span.upload-button {
-			color: #3f51b5;
-			font-size: 1rem;
-			font-weight: 500;
-			cursor: pointer;
-			padding: 0.5rem 1rem;
-			border-radius: 5px;
-			background-color: white;
-			border: 2px solid #3f51b5;
+		.add-dog {
+			align-self: center;
 			margin-top: 1rem;
-			transition:
-				color 0.3s ease,
-				background-color 0.3s ease;
+		}
+	}
 
-			&:hover {
-				background-color: #3f51b5;
-				color: white;
+	.dog-container {
+		display: flex;
+		gap: 1rem;
+
+		.dog-wrapper {
+			display: flex;
+			justify-content: space-evenly;
+
+			.dog {
+				align-items: center;
+				background-color: #2c387e5b;
+				border-radius: 25px;
+				box-shadow: 0 4px 12px rgb(16 6 6 / 51.6%);
+				display: flex;
+				flex-direction: column;
+				gap: 0.25rem;
+				justify-content: space-between;
+				margin: 1rem;
+				max-width: 200px;
+				padding: 1rem;
 			}
 		}
 	}
 
-	// Profile container styling
 	.profile-container {
-		display: flex;
-		flex-direction: column;
-		background-color: #f9f9f9;
-		padding: 2rem;
-		border-radius: 10px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		flex-grow: 2;
-
-		// Profile header styling
-		.profile-header-wrapper {
-			display: flex;
-			justify-content: space-between;
-			margin-bottom: 2rem;
-			align-items: flex-start;
-
-			.title {
-				color: #333;
-				font-size: 1.2rem;
-				font-weight: bold;
-				margin: 0;
-			}
-		}
+		width: 350px;
 
 		.complete-info {
 			display: flex;
 			flex-direction: column;
 			gap: 0.5rem;
 		}
-		// User info container styling
-		.user-info-container {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 1.5rem;
-			padding: 1.5rem;
-			border-radius: 12px;
-			background-color: #f3f4fc; // Light background for card effect
-			box-shadow: 0 4px 10px rgba(63, 81, 181, 0.1); // Soft shadow for depth
-			border: 1px solid rgba(63, 81, 181, 0.2); // Subtle border
 
-			span {
-				font-size: 1rem;
-				color: #333;
-				display: flex;
-				flex-direction: column;
+	}
 
-				// Label styling
-				.label {
-					font-weight: 600;
-					color: #3f51b5; // Blue accent color
-					font-size: 0.95rem;
-					margin-bottom: 0.3rem;
-					text-transform: uppercase; // Consistent label styling
-				}
+	.info-wrapper {
+		background-color: #f3f4fc; // Light background for card effect
+		border: 1px solid rgb(63 81 181 / 20%); // Subtle border
+		border-radius: 12px;
+		box-shadow: 0 4px 10px rgb(63 81 181 / 10%); // Soft shadow for depth
+		display: grid;
+		gap: 2rem;
+		grid-template-columns: 1fr 1fr;
+		padding: 1.5rem;
 
-				// Value styling
-				.value {
-					font-weight: 500;
-					color: #555; // Darker color for values
-					font-size: 1.05rem;
-					margin-top: 0.2rem;
-				}
+
+		span {
+			color: #333;
+			display: flex;
+			flex-direction: column;
+			font-size: 1rem;
+
+			// Label styling
+			.label {
+				color: #3f51b5; // Blue accent color
+				font-size: 0.95rem;
+				font-weight: 600;
+				margin-bottom: 0.3rem;
+
+			}
+
+			// Value styling
+			.value {
+				color: #555; // Darker color for values
+				font-size: 1.05rem;
+				font-weight: 500;
+				margin-top: 0.2rem;
 			}
 		}
 	}
 
-	// Form container styling
-	.form-container {
+
+
+}
+
+.form-container {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+
+	form {
 		display: flex;
 		flex-direction: column;
+		gap: 1rem;
+		max-width: 400px;
+		width: 100%;
 
-		form {
+		label {
+			color: #3f51b5;
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		input[type="text"],
+		input[type="date"],
+		input[type="email"],
+		input[type="radio"] {
+			background-color: #f0f0f0;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			font-size: 1rem;
+			padding: 0.75rem;
+			width: 100%;
+
+			&:focus {
+				border-color: #3f51b5;
+				box-shadow: 0 0 4px rgb(63 81 181 / 30%);
+				outline: none;
+			}
+		}
+
+		.radio-wrapper {
+			align-items: center;
 			display: flex;
-			flex-direction: column;
 			gap: 1rem;
 
 			label {
-				font-weight: bold;
-				color: #3f51b5;
-				font-size: 1rem;
+				align-items: center;
+				display: flex;
+				gap: 0.5rem;
 			}
+		}
 
-			input {
-				padding: 0.75rem;
-				border: 1px solid #ddd;
-				border-radius: 5px;
-				font-size: 1rem;
-				background-color: #f0f0f0;
+		.checkbox-wrapper {
+			margin-top: 1rem;
 
-				&:focus {
-					outline: none;
-					border-color: #3f51b5;
-					box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
-				}
-			}
-
-			button {
-				background-color: #3f51b5;
-				color: white;
-				border: none;
-				cursor: pointer;
-				padding: 0.75rem;
-				font-size: 1rem;
+			label {
+				align-items: center;
+				display: flex;
 				font-weight: bold;
-				border-radius: 5px;
-				transition: background-color 0.3s ease;
-				margin-top: 1.5rem;
+				gap: 0.5rem;
+			}
+		}
 
-				&:hover {
-					background-color: #2c387e;
-				}
+		button {
+			background-color: #3f51b5;
+			border: none;
+			border-radius: 5px;
+			color: white;
+			cursor: pointer;
+			font-size: 1rem;
+			font-weight: bold;
+			margin-top: 1.5rem;
+			padding: 0.75rem;
+			transition: background-color 0.3s ease;
+
+			&:hover {
+				background-color: #2c387e;
 			}
 		}
 	}
 
-	// Spinner styling
-	.spinner {
-		width: 100%;
-		height: 50vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+}
+
+
+// Spinner styling
+.spinner {
+	align-items: center;
+	display: flex;
+	height: 50vh;
+	justify-content: center;
+	width: 100%;
 }

@@ -1,0 +1,5 @@
+<div class="img-wrapper">
+	<img [src]="imgSrc" [class.is-small]="isSmall" alt="profile-image" />
+	<app-button (click)="fileInput.click()" [isSmall]="true"> Upload new image </app-button>
+	<input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+</div>
