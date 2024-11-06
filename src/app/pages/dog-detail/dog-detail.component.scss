@@ -1,0 +1,57 @@
+@import '../../styles/colors';
+
+.dog-detail {
+	color: $white-color;
+	display: flex;
+	gap: 5rem;
+	justify-content: space-around;
+	padding: 4rem;
+
+	.dog-detail,
+	.dog-info-card {
+		border: 2px solid black;
+		border-radius: 40px;
+		box-shadow: 0 6px 12px rgb(0 0 0 / 15%);
+	}
+
+	.dog-detail {
+		color: $white-color;
+		flex-grow: 1;
+
+	}
+
+	.dog-info-card {
+		background-color: $primary-color;
+		display: flex;
+		flex-direction: column;
+		flex-grow: 3;
+		padding: 2rem;
+
+		.breed {
+			color: $dark-color;
+		}
+
+		.details-list {
+			display: flex;
+			flex-direction: column;
+			flex-grow: 1;
+			justify-content: space-evenly;
+		}
+
+		strong {
+			color: $dark-color; // Blue accent color
+			font-size: 0.95rem;
+			font-weight: 600;
+			margin-bottom: 0.3rem;
+		}
+	}
+
+	.dog-image-wrapper {
+		img {
+			border: 4px solid grey;
+			border-radius: 50%;
+			height: 300px;
+			width: 300px;
+		}
+	}
+}

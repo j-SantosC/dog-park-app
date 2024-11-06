@@ -3,7 +3,6 @@
 	<div *ngIf="!loading" class="profile-container">
 		<div class="title-wrapper">
 			<span>Me</span>
-			<app-button *ngIf="userInfo" [isSmall]="true" (onClick)="onEditUserInfo()"> {{ !edit ? 'Edit' : 'Save' }}</app-button>
 		</div>
 
 		<div *ngIf="!userInfo && !edit" class="complete-info">
@@ -12,7 +11,12 @@
 		</div>
 
 		<div *ngIf="userInfo && !edit" class="info-container">
-			<app-upload-image [imgSrc]="imageSrc" (loading)="(loading)" (formData)="this.uploadProfileImage($event)"></app-upload-image>
+			<app-upload-image
+				*ngIf="imageSrc"
+				[imgSrc]="imageSrc"
+				(loading)="(loading)"
+				(formData)="this.uploadProfileImage($event)"
+			></app-upload-image>
 			<div class="info-wrapper">
 				<span>
 					<span class="label">Name</span>
@@ -31,6 +35,9 @@
 					<span class="value">{{ userInfo.birthdate }}</span>
 				</span>
 			</div>
+			<div class="buttons-wrapper">
+				<app-button (onClick)="onEditUserInfo()" *ngIf="!edit">Edit</app-button>
+			</div>
 		</div>
 		<div *ngIf="edit" class="form-container">
 			<form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="onSubmit()">
@@ -47,6 +54,7 @@
 				<input formControlName="birthdate" type="date" />
 
 				<button type="submit">Submit</button>
+				<button (click)="edit = !edit">Cancel</button>
 			</form>
 		</div>
 	</div>
@@ -56,10 +64,22 @@
 		</div>
 		<div class="dog-wrapper">
 			<div *ngFor="let dog of userDogs" class="dog">
-				<app-button *ngIf="userInfo" [isSmall]="true" (onClick)="onEditDog(dog.id)"> {{ !editDog ? 'Edit' : 'Save' }}</app-button>
-				<app-upload-image [imgSrc]="dog.imageSrc" [isSmall]="true" (formData)="this.uploadDogImage($event, dog)"></app-upload-image>
-				<span>{{ dog.name }} - {{ dog.breed }}</span>
-				<br /><br />
+				<span class="dog-name" (click)="navigateToDogDetail(dog.id)">{{ dog.name }}</span>
+				<span class="dog-breed"> {{ dog.breed }}</span>
+				<app-upload-image
+					*ngIf="dog.imageSrc"
+					[imgSrc]="dog.imageSrc"
+					[isSmall]="true"
+					(formData)="this.uploadDogImage($event, dog)"
+				></app-upload-image>
+
+				<div *ngIf="dog.isServiceDog" class="checkbox-wrapper">
+					<span> Service Dog</span>
+				</div>
+				<div class="buttons-wrapper">
+					<app-button *ngIf="userInfo" [isSmall]="true" (onClick)="onEditDog(dog.id)"> {{ !editDog ? 'Edit' : 'Save' }}</app-button>
+					<app-button [isSmall]="true" (onClick)="onDeleteDog(dog.id)">x</app-button>
+				</div>
 			</div>
 		</div>
 		<app-button class="add-dog" [isSmall]="true" (onClick)="newDog = !newDog">Add new dog</app-button>
@@ -67,6 +87,7 @@
 	<div *ngIf="editDog || newDog" class="dog-container">
 		<div class="form-container">
 			<form [formGroup]="dogForm" (ngSubmit)="onDogSubmit()">
+				<div class="title-wrapper"><span>Edit Dog</span></div>
 				<label for="name">Name:</label>
 				<input type="text" id="name" formControlName="name" required />
 
@@ -76,6 +97,7 @@
 				<label for="birthday">Birthday:</label>
 				<input type="date" id="birthday" formControlName="birthdate" required />
 				<div class="radio-wrapper">
+					<br /><br />
 					<label>Gender:</label>
 					<label><input type="radio" formControlName="sex" value="male" /> Male</label>
 					<label><input type="radio" formControlName="sex" value="female" /> Female</label>
@@ -84,6 +106,7 @@
 					<label> <input type="checkbox" formControlName="isServiceDog" /> Service Dog </label>
 				</div>
 				<button type="submit" [disabled]="dogForm.invalid">Submit</button>
+				<button type="submit" (click)="editDog = ''">Cancel</button>
 			</form>
 		</div>
 	</div>
@@ -93,4 +116,7 @@
 	<div *ngIf="loading" class="spinner">
 		<app-spinner></app-spinner>
 	</div>
+</div>
+<div class="back-wrapper">
+	<app-button (onClick)="backClicked()">Go back</app-button>
 </div>

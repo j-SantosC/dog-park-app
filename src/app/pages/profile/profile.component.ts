@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { User } from '@angular/fire/auth';
 import { UserService } from '../../services/user.service';
 import { DogService } from '../../services/dog.service';
-import { UploadImageComponent } from '../../componenets/upload-image/upload-image.component';
+import { UploadImageComponent } from '../../components/upload-image/upload-image.component';
 
 interface UserInfo {
 	name: string;
@@ -142,6 +142,19 @@ export class ProfileComponent implements OnInit {
 			console.log('no dog to edit');
 		}
 	}
+	onDeleteDog(dogId: string) {
+		if (confirm('Are you sure you want to delete this dog?')) {
+			this.dogService.deleteDog(dogId).subscribe(
+				(response) => {
+					console.log('Dog deleted successfully', response);
+					this.getDogs();
+				},
+				(error) => {
+					console.error('Error deleting dog:', error);
+				}
+			);
+		}
+	}
 
 	onDogSubmit() {
 		if (this.dogForm.valid) {
@@ -213,6 +226,9 @@ export class ProfileComponent implements OnInit {
 				this.loading = false;
 			});
 		}
+	}
+	navigateToDogDetail(dogId: string): void {
+		this.router.navigate(['/dog-detail', this.user!.uid, dogId]);
 	}
 
 	backClicked(): void {

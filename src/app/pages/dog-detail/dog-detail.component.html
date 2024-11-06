@@ -1,0 +1,24 @@
+<div cla ss="container">
+	<div class="dog-detail">
+		<div class="dog-image-wrapper">
+			<img [src]="imgSrc" alt="Imagen de {{ dog.name }}" class="dog-image" />
+		</div>
+		<div class="dog-info-card">
+			<h2>{{ dog.name }}</h2>
+			<p class="breed">{{ dog.breed }}</p>
+			<div class="details-list">
+				<div class="info-wrapper">
+					<span><strong>Fecha de Nacimiento:</strong> {{ dog.birthdate }}</span>
+				</div>
+				<div class="info-wrapper">
+					<span><strong>Sexo:</strong> {{ dog.sex }}</span>
+				</div>
+
+				<div class="info-wrapper">
+					<span><strong>Perro de Servicio:</strong> {{ dog.isServiceDog ? 'Sí' : 'No' }}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<app-button (onClick)="onBack()">Back</app-button>
+</div>

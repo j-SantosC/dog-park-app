@@ -50,4 +50,8 @@ export class DogService {
 	updateDogInfo(dogId: string, dogData: Partial<{ name: string; breed: string; birthdate: string; sex: string; isServiceDog: boolean }>) {
 		return this.http.put(`${this.apiUrl}/update-dog/${dogId}`, dogData);
 	}
+
+	deleteDog(dogId: string): Observable<any> {
+		return this.http.delete(`${this.apiUrl}/delete-dog/${dogId}`);
+	}
 }
