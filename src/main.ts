@@ -7,15 +7,17 @@ import { firebaseConfig } from '../firebase'; // Ya tienes tu archivo firebase.t
 import { appConfig } from './app/app.config'; // Importa el appConfig
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './app/interceptors/token-interceptor.service';
+import { provideDatabase, getDatabase } from '@angular/fire/database'; //
 
 import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    ...appConfig.providers,
-    provideHttpClient(withInterceptors([tokenInterceptor])),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideRouter(routes),
-  ],
+	providers: [
+		...appConfig.providers,
+		provideHttpClient(withInterceptors([tokenInterceptor])),
+		provideFirebaseApp(() => initializeApp(firebaseConfig)),
+		provideDatabase(() => getDatabase()),
+		provideAuth(() => getAuth()),
+		provideRouter(routes),
+	],
 });
