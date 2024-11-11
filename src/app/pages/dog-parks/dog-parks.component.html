@@ -1,33 +1,29 @@
 <div class="container">
 	<div class="search-container">
-		<input type="text" placeholder="Enter city or street" [(ngModel)]="searchQuery" />
+		<input class="search" type="text" placeholder="Enter city or street" [(ngModel)]="searchQuery" />
 		<app-button (onClick)="searchLocation()">Search</app-button>
 	</div>
 	<div class="main-wrapper">
+		<div class="park-container">
+			<app-my-dogs [myDogs]="myDogs" btnText="Join the park!" (btnClicked)="addMyDogsToPark()"></app-my-dogs>
+		</div>
 		<div class="map-container">
 			<div id="map"></div>
-		</div>
-		<div class="park-container">
-			<div class="join-park">
-				<h2 class="title">My Dogs</h2>
-				<div class="my-dogs">
-					<div class="my-dog" *ngFor="let dog of myDogs">
-						<img [src]="dog.url" />
+			<div class="park-info-wrapper">
+				<div *ngIf="selectedPark" class="park-info">
+					<h2>{{ selectedPark.name }}</h2>
+					<span>Who is here?</span>
+					<div class="dog-wrapper">
+						<div class="dog" *ngFor="let dog of parkDogs">
+							<img [src]="dog.imageSrc" alt="" />
+						</div>
 					</div>
 				</div>
-				<app-button (onClick)="addDogsToPark()">{{ inThePark ? 'In the park!' : 'Join the Park' }}</app-button>
-			</div>
-		</div>
-	</div>
-	<div class="park-info-wrapper">
-		<div *ngIf="selectedPark" class="park-info">
-			<h2>{{ selectedPark.name }}</h2>
-			<span>Who is here?</span>
-			<div class="dog-wrapper">
-				<div class="dog" *ngFor="let dog of dogs">
-					<img [src]="dog" alt="" />
+				<div *ngIf="!selectedPark" class="park-info">
+					<span>Choose a Park</span>
 				</div>
 			</div>
 		</div>
 	</div>
+	<app-button (onClick)="back()">Back</app-button>
 </div>

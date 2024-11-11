@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { config } from '../../../config';
-import { Database, ref, onChildRemoved } from '@angular/fire/database';
+import { Database, ref, onChildRemoved, onChildAdded } from '@angular/fire/database';
 
 @Injectable({
 	providedIn: 'root',
@@ -12,7 +12,9 @@ export class ParkService {
 
 	apiUrl = config.apiUrl;
 	private database: Database = inject(Database);
-	public dogRemoved$ = new Subject<{ dogId: string; parkId: string }>(); // Subject para emitir eventos de eliminación de perros
+
+	dogRemoved$ = new Subject<{ dogId: string; parkId: string }>();
+	dogAdded$ = new Subject<{ dogId: string; parkId: string }>();
 
 	getDogParks(): Observable<any> {
 		return this.http.get<any>(`${this.apiUrl}/dog-parks`);
@@ -23,11 +25,23 @@ export class ParkService {
 		const dogData = { dogId: dogId };
 		return this.http.post(url, dogData);
 	}
-	subscribeToDogRemovals(parkId: string) {
+	subscribeToDogChanges(parkId: string) {
 		const dogsRef = ref(this.database, `dogParks/${parkId}/dogs`);
+
+		// Listen for dog removals
 		onChildRemoved(dogsRef, (snapshot) => {
 			const removedDogId = snapshot.key!;
-			this.dogRemoved$.next({ dogId: removedDogId, parkId }); // Emite el evento cuando se elimina un perro
+			this.dogRemoved$.next({ dogId: removedDogId, parkId }); // Emit event when a dog is removed
 		});
+
+		// Listen for dog additions
+		onChildAdded(dogsRef, (snapshot) => {
+			const addedDogId = snapshot.key!;
+			this.dogAdded$.next({ dogId: addedDogId, parkId }); // Emit event when a dog is added
+		});
+	}
+
+	getParkById(parkId: string): Observable<any> {
+		return this.http.get(`${this.apiUrl}/dog-parks/${parkId}`);
 	}
 }

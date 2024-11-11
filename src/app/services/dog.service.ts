@@ -2,16 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { config } from '../../../config';
-
-export interface Dog {
-	name: string;
-	breed: string;
-	birthdate: string;
-	sex: string;
-	isServiceDog: boolean;
-	dogID: string;
-	imageSrc?: string;
-}
+import { Dog } from '../models/dog-park';
 
 @Injectable({
 	providedIn: 'root',

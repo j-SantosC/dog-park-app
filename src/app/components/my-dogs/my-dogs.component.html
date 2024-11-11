@@ -1,0 +1,10 @@
+<div class="container">
+	<h2 class="title">My Dogs</h2>
+	<div class="my-dogs">
+		<div class="my-dog" *ngFor="let dog of myDogs">
+			<img [src]="dog.imageSrc" />
+			<span>{{ dog.name }}</span>
+		</div>
+	</div>
+	<app-button (onClick)="btnClicked.emit()">{{ btnText }}</app-button>
+</div>

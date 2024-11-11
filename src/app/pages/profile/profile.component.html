@@ -98,15 +98,15 @@
 				<input type="date" id="birthday" formControlName="birthdate" required />
 				<div class="radio-wrapper">
 					<br /><br />
-					<label>Gender:</label>
-					<label><input type="radio" formControlName="sex" value="male" /> Male</label>
-					<label><input type="radio" formControlName="sex" value="female" /> Female</label>
+					<label class="radio-label">Gender:</label>
+					<label class="radio-label"><input type="radio" formControlName="sex" value="male" /> Male</label>
+					<label class="radio-label"><input type="radio" formControlName="sex" value="female" /> Female</label>
 				</div>
 				<div class="checkbox-wrapper">
 					<label> <input type="checkbox" formControlName="isServiceDog" /> Service Dog </label>
 				</div>
 				<button type="submit" [disabled]="dogForm.invalid">Submit</button>
-				<button type="submit" (click)="editDog = ''">Cancel</button>
+				<button (click)="editDog = ''">Cancel</button>
 			</form>
 		</div>
 	</div>

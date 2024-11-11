@@ -4,45 +4,67 @@ import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import { ButtonComponent } from '../../components/button/button.component';
 import { ParkService } from '../../services/park.service';
-import { firstValueFrom, forkJoin, from, map, mergeMap, of, switchMap } from 'rxjs';
+import { firstValueFrom, from, map, mergeMap, Observable, of, Subscription, switchMap, toArray } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
 import { DogService } from '../../services/dog.service';
 import { CookieService } from '../../services/cookie.service';
+import { Dog, Park } from '../../models/dog-park';
+import { Router } from '@angular/router';
+import { MyDogsComponent } from '../../components/my-dogs/my-dogs.component';
 
 @Component({
 	selector: 'app-dog-parks',
 	standalone: true,
-	imports: [FormsModule, ButtonComponent, NgIf, NgFor],
+	imports: [FormsModule, ButtonComponent, NgIf, NgFor, ButtonComponent, MyDogsComponent],
 	templateUrl: './dog-parks.component.html',
 	styleUrl: './dog-parks.component.scss',
 })
 export class DogParksComponent implements OnInit {
 	private map!: L.Map;
 	public searchQuery: string = '';
-	dogParks: any[] = [];
-	public selectedPark: any = null;
-	dogs: any = [];
-	myDogs: any = [];
+
+	public dogParks: Park[] = [];
+
+	public selectedPark: Park | null = null;
+	public myDogsPark: Park | null = null;
+
+	parkDogs: Dog[] = [];
+	myDogs: Dog[] = [];
+
+	subscription: Subscription | undefined;
 
 	inThePark = false;
 
 	constructor(
 		private parkService: ParkService,
 		private dogService: DogService,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		private router: Router
 	) {}
 
-	async ngOnInit() {
-		this.dogParks = await firstValueFrom(this.parkService.getDogParks());
-		await this.initMap();
+	async ngOnInit(): Promise<void> {
+		this.dogParks = await this.getDogParks();
+		this.initMap();
 		this.addMarkers();
 		this.getMyDogs();
-		this.parkService.subscribeToDogRemovals('-OB7rEpIqhifvFYbeDzU');
 
-		// Suscribirse a las notificaciones de eliminación de perros
 		this.parkService.dogRemoved$.subscribe(({ dogId, parkId }) => {
 			console.log(`Dog with ID ${dogId} removed from park ${parkId}`);
-			this.removeDogFromView(dogId); // Llama a una función para actualizar la vista
+			if (this.selectedPark?.id === parkId) {
+				this.parkDogs = this.parkDogs.filter((dog: Dog) => {
+					return dogId !== dog.id;
+				});
+			}
+		});
+		this.parkService.dogAdded$.subscribe(({ dogId, parkId }) => {
+			console.log(`Dog with ID ${dogId} added to park ${parkId}`);
+			if (this.selectedPark?.id === parkId && this.myDogs.every((dog) => dog.id !== dogId)) {
+				this.getDogImages([dogId]).subscribe((dogs: Dog[]) => {
+					dogs.forEach((dog) => {
+						this.parkDogs = [...this.parkDogs, dog];
+					});
+				});
+			}
 		});
 	}
 
@@ -54,58 +76,28 @@ export class DogParksComponent implements OnInit {
 		}).addTo(this.map);
 
 		this.dogParks.forEach((park) => {
-			L.marker([park.latitude, park.longitude]).addTo(this.map).bindPopup(park.name);
-		});
-	}
-	removeDogFromView(dogId: string) {
-		this.dogParks = this.dogParks.map((park) => {
-			if (park.id === '-OB7rEpIqhifvFYbeDzU') {
-				if (park.dogs && typeof park.dogs === 'object') {
-					const { [dogId]: _, ...remainingDogs } = park.dogs;
-					park.dogs = remainingDogs;
-				}
+			if (park.longitude && park.latitude) {
+				L.marker([park.latitude, park.longitude])
+					.addTo(this.map)
+					.bindPopup(park.name ?? 'Unamed park');
 			}
-			return park;
 		});
-
-		this.dogs = Object.values(this.dogParks.find((park) => park.id === '-OB7rEpIqhifvFYbeDzU')?.dogs || {});
-
-		console.log('executed!!!');
 	}
 
-	getMyDogs() {
-		const userCookie = this.cookieService.get('user');
-		let userUID = '';
-		if (userCookie) {
-			userUID = JSON.parse(userCookie).uid;
-			console.log(userUID);
-		}
-		of(userUID)
-			.pipe(
-				switchMap((userID: any) => this.dogService.getUserDogs(userID)), // Get user's dogs based on user ID
-				switchMap((dogIDs: string[]) =>
-					from(dogIDs).pipe(
-						mergeMap((dog: any) =>
-							this.dogService.getDogImg(dog.id).pipe(
-								map((dogBlob: any) =>
-									this.myDogs.push({
-										dog: dog.id,
-										url: URL.createObjectURL(dogBlob), // Convert Blob to URL for image display
-									})
-								)
-							)
-						)
-					)
-				)
-			)
-			.subscribe((dogData) => {
-				if (dogData && dogData.url) {
-					this.myDogs.push(dogData.url); // Add each dog's image URL to the list
-				}
-			});
+	private addMarkers(): void {
+		this.dogParks.forEach((park) => {
+			if (park.longitude && park.latitude) {
+				const marker = L.marker([park.latitude, park.longitude]).addTo(this.map);
+
+				marker.on('click', () => {
+					this.selectedPark = park;
+					this.parkDogs = [];
+					this.getSelectedParkDogs();
+				});
+			}
+		});
 	}
 
-	// Method to search for a location
 	public searchLocation(): void {
 		if (this.searchQuery) {
 			(L.Control as any).Geocoder.nominatim().geocode(this.searchQuery, (results: any) => {
@@ -121,56 +113,81 @@ export class DogParksComponent implements OnInit {
 		}
 	}
 
-	getParkDogs() {
-		const dogsArray = this.selectedPark.dogs ? Object.values(this.selectedPark.dogs) : [];
+	async getDogParks(): Promise<Park[]> {
+		return await firstValueFrom(this.parkService.getDogParks());
+	}
 
-		// Crear un array de observables para las imágenes de los perros
-		const dogImageObservables: any[] = dogsArray.map((dog: any) => this.dogService.getDogImg(dog.dog));
+	public getMyDogs(): void {
+		const userCookie = this.cookieService.get('user');
+		let userUID = '';
+		if (userCookie) {
+			userUID = JSON.parse(userCookie).uid;
+		}
+		of(userUID)
+			.pipe(
+				switchMap((userID: string) => this.dogService.getUserDogs(userID)),
+				map((dogData: Dog[]) => dogData.map((dog) => dog.id)),
+				switchMap((dogIDs: string[]) => this.getDogImages(dogIDs)) // Call the new function to fetch images
+			)
+			.subscribe((dogsWithImgs) => (this.myDogs = dogsWithImgs));
+	}
 
-		// Usar forkJoin para esperar todas las solicitudes de imagen
-		forkJoin<Blob[]>(dogImageObservables).subscribe(
-			(dogImages) => {
-				this.dogs = dogImages
-					.filter((dogImg) => !!dogImg) // Filtrar imágenes nulas o vacías
-					.map((dogImg) => URL.createObjectURL(dogImg)); // Convertir cada Blob a URL
-			},
-			(error) => {
-				console.error('Error loading dog images:', error);
+	private getSelectedParkDogs(): void {
+		if (this.selectedPark?.id) {
+			this.parkService.getParkById(this.selectedPark.id).subscribe((actualPark: Park) => {
+				const dogsArray = actualPark.dogs ? Object.values(actualPark.dogs) : [];
+				const dogsIDsArray = dogsArray ? dogsArray.map((dog: Dog) => dog.id) : [];
+				this.getDogImages(dogsIDsArray).subscribe((dogsWithImgs) => (this.parkDogs = dogsWithImgs));
+			});
+		}
+	}
+
+	public addMyDogsToPark(): void {
+		if (this.selectedPark && this.selectedPark.id) {
+			this.inThePark = true;
+			this.myDogsPark = this.selectedPark;
+			this.subscription = of(...this.myDogs)
+				.pipe(
+					mergeMap((dog: Dog) => {
+						this.parkDogs.push(dog);
+						return this.parkService.addDogToPark(this.selectedPark!.id!, dog.id);
+					})
+				)
+				.subscribe(
+					(response) => {
+						console.log(response);
+					},
+					(error) => {
+						console.error('Error adding dog:', error);
+					}
+				);
+			if (this.myDogsPark?.id) {
+				this.parkService.subscribeToDogChanges(this.myDogsPark?.id);
 			}
+		}
+	}
+
+	private getDogImages(dogIDs: string[]): Observable<{ id: string; imageSrc: string }[]> {
+		return from(dogIDs).pipe(
+			mergeMap((dogID: string) =>
+				this.dogService.getDogImg(dogID).pipe(
+					map((dogBlob: any) => ({
+						id: dogID,
+						imageSrc: URL.createObjectURL(dogBlob),
+					}))
+				)
+			),
+			toArray()
 		);
 	}
 
-	private addMarkers(): void {
-		this.dogParks.forEach((park) => {
-			const marker = L.marker([park.latitude, park.longitude]).addTo(this.map);
-
-			marker.on('click', () => {
-				this.selectedPark = park;
-				this.dogs = []; // Limpiar URLs previas
-
-				// Convertir `dogs` a un array si es un objeto
-				this.getParkDogs();
-			});
-		});
+	ngOnDestroy(): void {
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+		}
 	}
 
-	addDogsToPark() {
-		this.inThePark = true;
-
-		of(...this.myDogs)
-			.pipe(
-				mergeMap((dog: any) => {
-					this.dogs.push(dog.url);
-					return this.parkService.addDogToPark(this.selectedPark.id, dog.dog);
-				})
-			)
-			.subscribe(
-				(response) => {
-					this.getParkDogs();
-				},
-				(error) => {
-					console.error('Error adding dog:', error);
-				}
-			);
+	back() {
+		this.router.navigate(['/dashboard']);
 	}
 }
