@@ -4,13 +4,14 @@ import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import { ButtonComponent } from '../../components/button/button.component';
 import { ParkService } from '../../services/park.service';
-import { firstValueFrom, from, map, mergeMap, Observable, of, Subscription, switchMap, toArray } from 'rxjs';
+import { firstValueFrom, mergeMap, of, Subscription } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
 import { DogService } from '../../services/dog.service';
 import { CookieService } from '../../services/cookie.service';
 import { Dog, Park } from '../../models/dog-park';
 import { Router } from '@angular/router';
 import { MyDogsComponent } from '../../components/my-dogs/my-dogs.component';
+import { DogsUtilsService } from '../../utils/dogs-utils.service';
 
 @Component({
 	selector: 'app-dog-parks',
@@ -39,14 +40,15 @@ export class DogParksComponent implements OnInit {
 		private parkService: ParkService,
 		private dogService: DogService,
 		private cookieService: CookieService,
-		private router: Router
+		private router: Router,
+		private dogUtils: DogsUtilsService
 	) {}
 
 	async ngOnInit(): Promise<void> {
 		this.dogParks = await this.getDogParks();
 		this.initMap();
 		this.addMarkers();
-		this.getMyDogs();
+		this.dogUtils.getMyDogs().subscribe((dogs) => (this.myDogs = dogs));
 
 		this.parkService.dogRemoved$.subscribe(({ dogId, parkId }) => {
 			console.log(`Dog with ID ${dogId} removed from park ${parkId}`);
@@ -59,7 +61,7 @@ export class DogParksComponent implements OnInit {
 		this.parkService.dogAdded$.subscribe(({ dogId, parkId }) => {
 			console.log(`Dog with ID ${dogId} added to park ${parkId}`);
 			if (this.selectedPark?.id === parkId && this.myDogs.every((dog) => dog.id !== dogId)) {
-				this.getDogImages([dogId]).subscribe((dogs: Dog[]) => {
+				this.dogUtils.getDogImages([dogId]).subscribe((dogs: Dog[]) => {
 					dogs.forEach((dog) => {
 						this.parkDogs = [...this.parkDogs, dog];
 					});
@@ -117,27 +119,12 @@ export class DogParksComponent implements OnInit {
 		return await firstValueFrom(this.parkService.getDogParks());
 	}
 
-	public getMyDogs(): void {
-		const userCookie = this.cookieService.get('user');
-		let userUID = '';
-		if (userCookie) {
-			userUID = JSON.parse(userCookie).uid;
-		}
-		of(userUID)
-			.pipe(
-				switchMap((userID: string) => this.dogService.getUserDogs(userID)),
-				map((dogData: Dog[]) => dogData.map((dog) => dog.id)),
-				switchMap((dogIDs: string[]) => this.getDogImages(dogIDs)) // Call the new function to fetch images
-			)
-			.subscribe((dogsWithImgs) => (this.myDogs = dogsWithImgs));
-	}
-
 	private getSelectedParkDogs(): void {
 		if (this.selectedPark?.id) {
 			this.parkService.getParkById(this.selectedPark.id).subscribe((actualPark: Park) => {
 				const dogsArray = actualPark.dogs ? Object.values(actualPark.dogs) : [];
 				const dogsIDsArray = dogsArray ? dogsArray.map((dog: Dog) => dog.id) : [];
-				this.getDogImages(dogsIDsArray).subscribe((dogsWithImgs) => (this.parkDogs = dogsWithImgs));
+				this.dogUtils.getDogImages(dogsIDsArray).subscribe((dogsWithImgs) => (this.parkDogs = dogsWithImgs));
 			});
 		}
 	}
@@ -165,20 +152,6 @@ export class DogParksComponent implements OnInit {
 				this.parkService.subscribeToDogChanges(this.myDogsPark?.id);
 			}
 		}
-	}
-
-	private getDogImages(dogIDs: string[]): Observable<{ id: string; imageSrc: string }[]> {
-		return from(dogIDs).pipe(
-			mergeMap((dogID: string) =>
-				this.dogService.getDogImg(dogID).pipe(
-					map((dogBlob: any) => ({
-						id: dogID,
-						imageSrc: URL.createObjectURL(dogBlob),
-					}))
-				)
-			),
-			toArray()
-		);
 	}
 
 	ngOnDestroy(): void {

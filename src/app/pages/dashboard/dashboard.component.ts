@@ -5,9 +5,9 @@ import { User } from '@angular/fire/auth';
 import { RouterModule } from '@angular/router';
 import { MyDogsComponent } from '../../components/my-dogs/my-dogs.component';
 import { ButtonComponent } from '../../components/button/button.component';
-import { of, switchMap, map, from, mergeMap, Observable, toArray } from 'rxjs';
 import { Dog } from '../../models/dog-park';
 import { DogService } from '../../services/dog.service';
+import { DogsUtilsService } from '../../utils/dogs-utils.service';
 
 @Component({
 	selector: 'app-dashboard',
@@ -22,41 +22,14 @@ export class DashboardComponent implements OnInit {
 
 	constructor(
 		private authService: AuthService,
-		private dogService: DogService
+		private dogService: DogService,
+		private dogUtils: DogsUtilsService
 	) {}
 
 	ngOnInit(): void {
 		this.authService.getCurrentUser().subscribe((user) => {
 			this.user = user;
-			this.getMyDogs();
+			this.dogUtils.getMyDogs().subscribe((dogs) => (this.myDogs = dogs));
 		});
-	}
-
-	public getMyDogs(): void {
-		let userUID = '';
-		if (this.user) {
-			userUID = this.user.uid;
-		}
-		of(userUID)
-			.pipe(
-				switchMap((userID: string) => this.dogService.getUserDogs(userID)),
-				map((dogData: Dog[]) => dogData.map((dog) => dog.id)),
-				switchMap((dogIDs: string[]) => this.getDogImages(dogIDs)) // Call the new function to fetch images
-			)
-			.subscribe((dogsWithImgs) => (this.myDogs = dogsWithImgs));
-	}
-
-	private getDogImages(dogIDs: string[]): Observable<{ id: string; imageSrc: string }[]> {
-		return from(dogIDs).pipe(
-			mergeMap((dogID: string) =>
-				this.dogService.getDogImg(dogID).pipe(
-					map((dogBlob: any) => ({
-						id: dogID,
-						imageSrc: URL.createObjectURL(dogBlob),
-					}))
-				)
-			),
-			toArray()
-		);
 	}
 }
