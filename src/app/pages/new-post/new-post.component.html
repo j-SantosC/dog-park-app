@@ -1,0 +1,22 @@
+<div class="container">
+	<h1>new post</h1>
+	<div class="main-wrapper">
+		<div class="form-wrapper">
+			<form [formGroup]="postForm">
+				<div class="input-wrapper">
+					<label> title</label>
+					<input class="title" type="text" formControlName="title" />
+				</div>
+				<div class="input-wrapper">
+					<label>Content</label>
+					<textarea class="content" formControlName="content" rows="20"></textarea>
+					<span>Bark Park - 24 Ago 2025</span>
+				</div>
+				<app-button (onClick)="submit()">Submit Post</app-button>
+			</form>
+		</div>
+		<div class="img-wrapper">
+			<app-upload-image (file)="imgUploaded($event)" [imgSrc]="imagePreview" [isSquare]="true"></app-upload-image>
+		</div>
+	</div>
+</div>

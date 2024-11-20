@@ -3,7 +3,7 @@
 
 * {
 	box-sizing: border-box;
-	font-family: "Amatic SC", sans-serif;
+	font-family: Montserrat, sans-serif;
 	margin: 0;
 	padding: 0;
 }
@@ -18,13 +18,16 @@ body {
 .app-container {
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+
+	// min-height: 100vh;
 }
 
 .app-header {
 	align-items: center;
 	background-color: $primary-color;
+	border-bottom: 2px solid black;
 	color: white;
+	cursor: pointer;
 	display: flex;
 	font-size: 20px;
 	font-style: normal;
@@ -32,6 +35,14 @@ body {
 	justify-content: space-between;
 	padding: 1rem 2rem;
 	text-align: center;
+
+	.btns-wrapper {
+		display: flex;
+		flex-grow: 1;
+		gap: 2rem;
+		justify-content: start;
+		margin-left: 2rem;
+	}
 }
 
 .app-content {
@@ -41,13 +52,17 @@ body {
 	padding: 2rem;
 }
 
-.app-footer {
-	background-color: $primary-color;
-	color: white;
-	margin-top: auto;
-	padding: 1rem;
-	text-align: center;
-}
+// .app-footer {
+// 	background-color: $primary-color;
+// 	border-top: 2px solid black;
+// 	bottom: 0;
+// 	color: white;
+// 	margin-top: auto;
+// 	padding: 1rem;
+// 	position: sticky;
+// 	text-align: center;
+// 	width: 100%;
+// }
 
 .logout-button {
 	color: white;

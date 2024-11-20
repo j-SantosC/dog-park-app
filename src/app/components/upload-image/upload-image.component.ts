@@ -11,14 +11,16 @@ import { ButtonComponent } from '../../components/button/button.component';
 })
 export class UploadImageComponent {
 	@Output() loading = new EventEmitter();
+	@Output() file = new EventEmitter();
 	@Output() formData = new EventEmitter();
 
-	@Input() imgSrc = '';
-	@Input() isSmall = false;
+	@Input() imgSrc = 'assets/default-dog.webp';
+	@Input() isSquare = false;
 
 	onFileSelected(event: Event): void {
 		const file = (event.target as HTMLInputElement).files?.[0];
 		if (file) {
+			this.file.emit(file);
 			this.uploadProfileImage(file);
 		}
 	}

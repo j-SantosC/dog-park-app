@@ -66,19 +66,14 @@
 			<div *ngFor="let dog of userDogs" class="dog">
 				<span class="dog-name" (click)="navigateToDogDetail(dog.id)">{{ dog.name }}</span>
 				<span class="dog-breed"> {{ dog.breed }}</span>
-				<app-upload-image
-					*ngIf="dog.imageSrc"
-					[imgSrc]="dog.imageSrc"
-					[isSmall]="true"
-					(formData)="this.uploadDogImage($event, dog)"
-				></app-upload-image>
+				<app-upload-image *ngIf="dog.imageSrc" [imgSrc]="dog.imageSrc" (formData)="this.uploadDogImage($event, dog)"></app-upload-image>
 
 				<div *ngIf="dog.isServiceDog" class="checkbox-wrapper">
 					<span> Service Dog</span>
 				</div>
 				<div class="buttons-wrapper">
 					<app-button *ngIf="userInfo" [isSmall]="true" (onClick)="onEditDog(dog.id)"> {{ !editDog ? 'Edit' : 'Save' }}</app-button>
-					<app-button [isSmall]="true" (onClick)="onDeleteDog(dog.id)">x</app-button>
+					<app-button [isSmall]="true" (onClick)="onDeleteDog(dog.id)">Delete</app-button>
 				</div>
 			</div>
 		</div>

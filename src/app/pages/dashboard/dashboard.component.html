@@ -4,9 +4,13 @@
 		<div class="my-dogs">
 			<app-my-dogs [myDogs]="myDogs" btnText="Go to a Park!"></app-my-dogs>
 		</div>
-		<div class="btns-wrapper">
-			<app-button routerLink="/profile">To profile</app-button>
-			<app-button routerLink="/parks">To parks</app-button>
+		<div class="posts-wrapper">
+			<div *ngFor="let post of posts" class="post">
+				<app-post *ngIf="!loading" [mine]="isMine(post.userID)" (edit)="onEdit(post)" (delete)="deletePost(post)" [post]="post"></app-post>
+			</div>
+			<div *ngIf="loading" class="loading">
+				<app-spinner></app-spinner>
+			</div>
 		</div>
 	</div>
 </div>

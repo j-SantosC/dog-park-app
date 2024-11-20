@@ -1,3 +1,5 @@
+@import '../../styles/colors';
+
 .container {
 	align-items: center;
 	background-color: #f5f5f5; // Light background color for contrast
@@ -17,13 +19,34 @@
 	.main-wrapper {
 		display: flex;
 		flex-grow: 1;
+		gap: 2rem;
 		justify-content: center;
 		width: 100%;
 
+		.posts-wrapper {
+			background-color: $terciary-color;
+			border: 2px solid black;
+			border-radius: 8px;
+			margin-bottom: 2rem;
+			min-width: 700px;
+			padding: 1rem;
+			padding-top: 2rem;
+
+			.posts {
+				background-color: none;
+			}
+
+			.loading {
+				margin-top: 5rem;
+			}
+		}
+
 		.btns-wrapper {
+			border: 2px solid black;
+			border-radius: 8px;
 			display: flex;
 			flex-direction: column;
-			margin-left: 3rem;
+			margin-top: 2rem;
 
 			>* {
 				margin: 2rem;

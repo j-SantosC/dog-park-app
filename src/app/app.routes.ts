@@ -5,6 +5,8 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { DogDetailComponent } from './pages/dog-detail/dog-detail.component';
 import { DogParksComponent } from './pages/dog-parks/dog-parks.component';
+import { NewPostComponent } from './pages/new-post/new-post.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -12,11 +14,12 @@ export const routes: Routes = [
 	{ path: 'parks', component: DogParksComponent },
 	{ path: 'profile', component: ProfileComponent },
 	{ path: 'dog-detail/:userUID/:dogID', component: DogDetailComponent },
+	{ path: 'new-post', component: NewPostComponent },
+	{ path: 'new-post/:id', component: NewPostComponent },
 	{
 		path: 'dashboard',
 		component: DashboardComponent,
-		//TODO: Fix problem reloading in dashboard with guard
-		// canActivate: [AuthGuard],
+		canActivate: [AuthGuard],
 	},
 	{ path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

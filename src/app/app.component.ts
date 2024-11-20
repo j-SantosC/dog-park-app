@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { User } from '@angular/fire/auth';
 import { NgIf } from '@angular/common';
@@ -10,7 +10,7 @@ import { ButtonComponent } from './components/button/button.component';
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [RouterOutlet, NgIf, ButtonComponent],
+	imports: [RouterOutlet, NgIf, ButtonComponent, RouterModule],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.scss',
 })
@@ -43,6 +43,10 @@ export class AppComponent implements OnInit {
 		} catch (error) {
 			console.error('Error during initialization:', error);
 		}
+	}
+
+	home() {
+		this.router.navigate(['/dashboard']);
 	}
 
 	logout(): Promise<void> {

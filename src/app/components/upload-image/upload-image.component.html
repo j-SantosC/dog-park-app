@@ -1,5 +1,5 @@
 <div class="img-wrapper">
-	<img [src]="imgSrc" [class.is-small]="isSmall" alt="profile-image" />
+	<img [src]="imgSrc" [class.is-square]="isSquare" alt="profile-image" />
 	<span (click)="fileInput.click()"> Upload new image </span>
 	<input type="file" #fileInput (change)="onFileSelected($event)" hidden />
 </div>

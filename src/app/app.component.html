@@ -1,6 +1,11 @@
 <div class="app-container">
 	<header class="app-header">
-		<h1>pup-radar</h1>
+		<h1 (click)="home()">pup-radar</h1>
+		<div *ngIf="user" class="btns-wrapper">
+			<app-button routerLink="/profile">To profile</app-button>
+			<app-button routerLink="/parks">To parks</app-button>
+			<app-button routerLink="/new-post">To new-post</app-button>
+		</div>
 		<span *ngIf="user" (click)="logout()" class="logout-button">Logout</span>
 	</header>
 
@@ -8,7 +13,7 @@
 		<router-outlet></router-outlet>
 	</div>
 
-	<footer class="app-footer">
+	<!-- <footer class="app-footer">
 		<p>© 2024 My Angular App. All rights reserved.</p>
-	</footer>
+	</footer> -->
 </div>

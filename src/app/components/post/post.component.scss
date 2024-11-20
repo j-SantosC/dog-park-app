@@ -1,0 +1,68 @@
+@import '../../styles/colors';
+
+.container {
+	.main-wrapper {
+		background-color: $white-color;
+		border: 2px solid black;
+		border-radius: 8px;
+		display: flex;
+		margin: 0 3rem 3rem;
+		padding: 2rem;
+
+		img {
+			border: 2px solid black;
+			border-radius: 8px;
+			height: 250px;
+			object-fit: cover;
+			width: 250px;
+		}
+
+		.info-wrapper {
+			display: flex;
+			flex-direction: column;
+			min-width: 250px;
+
+			.post-header {
+				align-items: center;
+				display: flex;
+				gap: 1rem;
+				justify-content: flex-start;
+
+				.title-date-wrapper {
+					display: flex;
+					flex-direction: column;
+				}
+			}
+
+			.pfofile-img {
+				border-radius: 50%;
+				height: 50px;
+				width: 50px;
+
+
+			}
+
+			.date-stamp {
+				font-size: 10px;
+			}
+
+			.content {
+				font-size: 12px;
+				margin: 2rem 1rem 1rem;
+				max-width: 200px;
+			}
+
+			.title {
+				font-weight: bold;
+				margin: 1rem 0.5rem 0.5rem;
+				max-width: 200px;
+			}
+
+			.btns-wrapper {
+				display: flex;
+				gap: 1rem;
+				margin-top: auto;
+			}
+		}
+	}
+}
