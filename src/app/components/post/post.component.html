@@ -2,9 +2,9 @@
 	<div class="main-wrapper">
 		<div class="info-wrapper">
 			<div class="post-header">
-				<img class="pfofile-img" [src]="profileImg" alt="" />
 				<div class="title-date-wrapper">
-					<span class="title">{{ post.title }}</span>
+					<span class="title-post">{{ post.title }}</span>
+					<span class="post-owner">by {{ userName }}</span>
 					<span class="date-stamp">{{ post.createdAt._seconds * 1000 | date: 'MMM d, y, h:mm a' }}</span>
 				</div>
 			</div>

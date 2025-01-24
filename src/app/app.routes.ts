@@ -6,7 +6,6 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { DogDetailComponent } from './pages/dog-detail/dog-detail.component';
 import { DogParksComponent } from './pages/dog-parks/dog-parks.component';
 import { NewPostComponent } from './pages/new-post/new-post.component';
-import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
 	{ path: 'login', component: LoginComponent },
@@ -19,7 +18,7 @@ export const routes: Routes = [
 	{
 		path: 'dashboard',
 		component: DashboardComponent,
-		canActivate: [AuthGuard],
+		// canActivate: [AuthGuard],
 	},
 	{ path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

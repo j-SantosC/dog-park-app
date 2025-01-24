@@ -60,11 +60,13 @@ export class DogParksComponent implements OnInit {
 		});
 		this.parkService.dogAdded$.subscribe(({ dogId, parkId }) => {
 			console.log(`Dog with ID ${dogId} added to park ${parkId}`);
-			if (this.selectedPark?.id === parkId && this.myDogs.every((dog) => dog.id !== dogId)) {
+			if (this.selectedPark?.id === parkId) {
 				this.dogUtils.getDogImages([dogId]).subscribe((dogs: Dog[]) => {
-					dogs.forEach((dog) => {
-						this.parkDogs = [...this.parkDogs, dog];
-					});
+					{
+						if (!this.parkDogs.some((dog) => dog.id === dogId)) {
+							this.parkDogs.push(dogs[0]);
+						}
+					}
 				});
 			}
 		});
@@ -94,6 +96,7 @@ export class DogParksComponent implements OnInit {
 				marker.on('click', () => {
 					this.selectedPark = park;
 					this.parkDogs = [];
+					this.parkService.subscribeToDogChanges(park.id);
 					this.getSelectedParkDogs();
 				});
 			}
@@ -136,7 +139,7 @@ export class DogParksComponent implements OnInit {
 			this.subscription = of(...this.myDogs)
 				.pipe(
 					mergeMap((dog: Dog) => {
-						this.parkDogs.push(dog);
+						// this.parkDogs.push(dog);
 						return this.parkService.addDogToPark(this.selectedPark!.id!, dog.id);
 					})
 				)
@@ -148,9 +151,6 @@ export class DogParksComponent implements OnInit {
 						console.error('Error adding dog:', error);
 					}
 				);
-			if (this.myDogsPark?.id) {
-				this.parkService.subscribeToDogChanges(this.myDogsPark?.id);
-			}
 		}
 	}
 

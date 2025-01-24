@@ -81,7 +81,7 @@
 	</div>
 	<div *ngIf="editDog || newDog" class="dog-container">
 		<div class="form-container">
-			<form [formGroup]="dogForm" (ngSubmit)="onDogSubmit()">
+			<form [formGroup]="dogForm">
 				<div class="title-wrapper"><span>Edit Dog</span></div>
 				<label for="name">Name:</label>
 				<input type="text" id="name" formControlName="name" required />
@@ -100,8 +100,10 @@
 				<div class="checkbox-wrapper">
 					<label> <input type="checkbox" formControlName="isServiceDog" /> Service Dog </label>
 				</div>
-				<button type="submit" [disabled]="dogForm.invalid">Submit</button>
-				<button (click)="editDog = ''">Cancel</button>
+				<div class="btns-wrapper">
+					<app-button (onClick)="onDogSubmit()">Submit</app-button>
+					<app-button (onClick)="onCancel()">Cancel</app-button>
+				</div>
 			</form>
 		</div>
 	</div>

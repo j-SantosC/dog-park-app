@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Post } from '../../models/post';
 import { ButtonComponent } from '../button/button.component';
 import { DatePipe, NgIf } from '@angular/common';
-import { ProfileService } from '../../services/profile.service';
 import { CookieService } from '../../services/cookie.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
 	selector: 'app-post',
@@ -15,20 +15,20 @@ import { CookieService } from '../../services/cookie.service';
 export class PostComponent implements OnInit {
 	@Input() post!: Post;
 	@Input() mine!: boolean;
+	@Input() owner!: any;
 
 	@Output() edit = new EventEmitter();
 	@Output() delete = new EventEmitter();
 
-	profileImg: any = '';
+	userName: string = '';
 
 	constructor(
-		private profileService: ProfileService,
+		private userService: UserService,
 		private cookieService: CookieService
 	) {}
 
 	ngOnInit() {
-		const user = JSON.parse(this.cookieService.get('user')!);
-		this.profileService.getProfileImg(user.uid).subscribe((img: any) => (this.profileImg = URL.createObjectURL(img)));
+		this.userService.getUserInfo(this.owner).subscribe((data: any) => (this.userName = data.name));
 	}
 
 	editPost() {

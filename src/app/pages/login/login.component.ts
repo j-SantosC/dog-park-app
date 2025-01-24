@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { TokenService } from '../../services/token.service'; // Importar el TokenService
+import { CookieService } from '../../services/cookie.service';
 
 @Component({
 	selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
 		private fb: FormBuilder,
 		private router: Router,
 		private authService: AuthService,
-		private tokenService: TokenService
+		private tokenService: TokenService,
+		private cookieService: CookieService
 	) {
 		this.loginForm = this.fb.group({
 			email: ['', [Validators.required]],
@@ -28,14 +30,8 @@ export class LoginComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		const token = this.tokenService.getToken();
-		if (token) {
-			this.authService.validateToken(token).then((isValid) => {
-				if (isValid) {
-					this.router.navigate(['/dashboard']);
-				}
-			});
-		}
+		this.cookieService.delete('user');
+		this.cookieService.delete('auth_token');
 	}
 
 	onSubmit() {

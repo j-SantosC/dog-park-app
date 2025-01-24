@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { TokenService } from '../../services/token.service';
+import { CookieService } from '../../services/cookie.service';
 
 @Component({
 	selector: 'app-signup',
@@ -20,7 +21,8 @@ export class SignUpComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private authService: AuthService,
 		private router: Router,
-		private tokenService: TokenService
+		private tokenService: TokenService,
+		private cookieService: CookieService
 	) {}
 
 	ngOnInit(): void {
@@ -29,6 +31,8 @@ export class SignUpComponent implements OnInit {
 			email: ['', [Validators.required, Validators.email]],
 			password: ['', [Validators.required, Validators.minLength(6)]],
 		});
+		this.cookieService.delete('auth_token');
+		this.cookieService.delete('user');
 	}
 
 	onSubmit(): void {

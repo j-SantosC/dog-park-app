@@ -67,6 +67,9 @@ export class ProfileComponent implements OnInit {
 		});
 
 		this.user = await firstValueFrom(this.getUser());
+
+		this.userForm.patchValue({ email: this.user?.email });
+
 		this.userInfo = await this.getUserInfo();
 		await this.loadImages(true);
 		this.getDogs();
@@ -229,6 +232,11 @@ export class ProfileComponent implements OnInit {
 	}
 	navigateToDogDetail(dogId: string): void {
 		this.router.navigate(['/dog-detail', this.user!.uid, dogId]);
+	}
+
+	onCancel() {
+		this.editDog = '';
+		this.newDog = false;
 	}
 
 	backClicked(): void {

@@ -6,7 +6,14 @@
 		</div>
 		<div class="posts-wrapper">
 			<div *ngFor="let post of posts" class="post">
-				<app-post *ngIf="!loading" [mine]="isMine(post.userID)" (edit)="onEdit(post)" (delete)="deletePost(post)" [post]="post"></app-post>
+				<app-post
+					*ngIf="!loading"
+					[mine]="isMine(post.userID)"
+					[owner]="post.userID"
+					(edit)="onEdit(post)"
+					(delete)="deletePost(post)"
+					[post]="post"
+				></app-post>
 			</div>
 			<div *ngIf="loading" class="loading">
 				<app-spinner></app-spinner>

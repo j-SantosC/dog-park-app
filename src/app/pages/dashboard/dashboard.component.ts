@@ -53,17 +53,17 @@ export class DashboardComponent implements OnInit {
 	}
 
 	deletePost(post: Post): void {
-		console.log(post);
-
-		if (this.user && this.user.uid) {
-			this.postService.deletePost(post.id, this.user.uid, post.imageUrl).subscribe({
-				next: (response) => {
-					this.posts = this.posts.filter((p: any) => p.id !== post.id);
-				},
-				error: (err) => {
-					console.error('Error deleting post:', err);
-				},
-			});
+		if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+			if (this.user && this.user.uid) {
+				this.postService.deletePost(post.id, this.user.uid, post.imageUrl).subscribe({
+					next: () => {
+						this.posts = this.posts.filter((p: any) => p.id !== post.id);
+					},
+					error: (err) => {
+						console.error('Error deleting post:', err);
+					},
+				});
+			}
 		}
 	}
 

@@ -29,8 +29,21 @@
 				justify-content: flex-start;
 
 				.title-date-wrapper {
+					align-items: flex-start;
 					display: flex;
 					flex-direction: column;
+					padding-left: 0;
+
+					.title-post {
+						font-weight: bold;
+						max-width: 200px;
+					}
+
+					.post-owner {
+						font-size: 0.8rem;
+						margin-bottom: .5rem;
+						text-decoration: underline;
+					}
 				}
 			}
 
@@ -52,11 +65,7 @@
 				max-width: 200px;
 			}
 
-			.title {
-				font-weight: bold;
-				margin: 1rem 0.5rem 0.5rem;
-				max-width: 200px;
-			}
+
 
 			.btns-wrapper {
 				display: flex;

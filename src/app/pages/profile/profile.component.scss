@@ -36,8 +36,9 @@
 		color: $dark-color;
 		display: flex;
 		flex-direction: column;
-		flex-grow: 1;
+		min-width: 400px;
 		padding: 2rem;
+		width: fit-content;
 
 
 		.add-dog {
@@ -50,8 +51,6 @@
 		background-color: $primary-color;
 		color: $dark-color ;
 		display: flex;
-		gap: 1rem;
-
 
 		.dog-wrapper {
 			display: flex;
@@ -136,6 +135,8 @@
 	}
 
 	.info-container {
+		height: 100%;
+
 		.buttons-wrapper {
 			margin-top: 3rem;
 			text-align: center;
@@ -252,6 +253,15 @@
 		&:hover {
 			background-color: #2c387e;
 		}
+	}
+
+	.btns-wrapper {
+		align-items: center;
+		display: flex;
+		gap: 2rem;
+		justify-content: center;
+		margin-top: 3rem;
+
 	}
 }
 
