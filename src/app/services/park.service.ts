@@ -41,6 +41,10 @@ export class ParkService {
 		});
 	}
 
+	removeDogFromPark(parkId: string, dogId: string): Observable<any> {
+		return this.http.delete(`${this.apiUrl}/dog-parks/${parkId}/dogs/${dogId}`);
+	}
+
 	getParkById(parkId: string): Observable<any> {
 		return this.http.get(`${this.apiUrl}/dog-parks/${parkId}`);
 	}

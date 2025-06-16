@@ -74,4 +74,8 @@ export class DashboardComponent implements OnInit {
 	onEdit(post: any) {
 		this.router.navigate(['new-post', post.id]);
 	}
+
+	toParkClicked() {
+		this.router.navigate(['parks']);
+	}
 }

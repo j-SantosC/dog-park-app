@@ -5,7 +5,12 @@
 	</div>
 	<div class="main-wrapper">
 		<div class="park-container">
-			<app-my-dogs [myDogs]="myDogs" btnText="Join the park!" (btnClicked)="addMyDogsToPark()"></app-my-dogs>
+			<app-my-dogs
+				[myDogs]="myDogs"
+				[btnText]="inThePark ? 'Leave the Park' : 'Join the park!'"
+				(btnClicked)="addOrRemoveMyDogsToPark()"
+			></app-my-dogs>
+			<app-button class="back" (onClick)="back()">Back</app-button>
 		</div>
 		<div class="map-container">
 			<div id="map"></div>
@@ -25,5 +30,4 @@
 			</div>
 		</div>
 	</div>
-	<app-button (onClick)="back()">Back</app-button>
 </div>

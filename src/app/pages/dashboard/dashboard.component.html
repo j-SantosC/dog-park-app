@@ -2,7 +2,7 @@
 	<h1 class="welcome-message">Welcome, {{ user?.email }}!</h1>
 	<div class="main-wrapper">
 		<div class="my-dogs">
-			<app-my-dogs [myDogs]="myDogs" btnText="Go to a Park!"></app-my-dogs>
+			<app-my-dogs [myDogs]="myDogs" (btnClicked)="toParkClicked()" btnText="Go to a Park!"></app-my-dogs>
 		</div>
 		<div class="posts-wrapper">
 			<div *ngFor="let post of posts" class="post">

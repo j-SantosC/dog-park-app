@@ -132,25 +132,46 @@ export class DogParksComponent implements OnInit {
 		}
 	}
 
-	public addMyDogsToPark(): void {
+	public addOrRemoveMyDogsToPark(): void {
 		if (this.selectedPark && this.selectedPark.id) {
-			this.inThePark = true;
-			this.myDogsPark = this.selectedPark;
-			this.subscription = of(...this.myDogs)
-				.pipe(
-					mergeMap((dog: Dog) => {
-						// this.parkDogs.push(dog);
-						return this.parkService.addDogToPark(this.selectedPark!.id!, dog.id);
-					})
-				)
-				.subscribe(
-					(response) => {
-						console.log(response);
-					},
-					(error) => {
-						console.error('Error adding dog:', error);
-					}
-				);
+			if (!this.inThePark) {
+				this.inThePark = true;
+				this.myDogsPark = this.selectedPark;
+				this.subscription = of(...this.myDogs)
+					.pipe(
+						mergeMap((dog: Dog) => {
+							return this.parkService.addDogToPark(this.selectedPark!.id!, dog.id);
+						})
+					)
+					.subscribe(
+						(response) => {
+							console.log(response);
+						},
+						(error) => {
+							console.error('Error adding dog:', error);
+						}
+					);
+			} else {
+				// Remove each dog from the park
+				this.subscription = of(...this.myDogs)
+					.pipe(
+						mergeMap((dog: Dog) => {
+							return this.parkService.removeDogFromPark(this.selectedPark!.id!, dog.id);
+						})
+					)
+					.subscribe(
+						(response) => {
+							console.log('Dog removed:', response);
+						},
+						(error) => {
+							console.error('Error removing dog:', error);
+						},
+						() => {
+							this.inThePark = false; // Mark as not in the park after all removals
+							this.myDogsPark = null;
+						}
+					);
+			}
 		}
 	}
 

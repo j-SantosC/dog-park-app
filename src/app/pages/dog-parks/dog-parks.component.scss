@@ -72,13 +72,12 @@
 
 			}
 		}
+
+		.park-container {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
 	}
 
-	.park-container {
-		align-items: center;
-	}
-
-	.back {
-		margin-top: 2rem;
-	}
 }
